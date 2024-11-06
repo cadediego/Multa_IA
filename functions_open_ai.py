@@ -10,7 +10,7 @@ load_dotenv()
 
 
 openai.api_key = os.getenv("OPENAI_API_KEY")
-# Substitua pela sua chave de API
+#  Substitua pela sua chave de API
 
 def extrair_dados_da_imagem(image_bytes):
     """
