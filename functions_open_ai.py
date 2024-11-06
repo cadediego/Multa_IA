@@ -28,7 +28,7 @@ def extrair_dados_da_imagem(image_bytes):
         img_b64_str = image_to_base64(image_bytes)
         prompt = "Extrair as informações de multa, como número da placa, infração, pontos na carteira, data e hora, e elementos de trânsito (como semáforo)."
         # Criar o payload para a requisição à API
-        response = client.chat_completions.create(
+        response = client.chat.completions.create(
             model="gpt-4o-mini",  # Modelo GPT com capacidade de visão (ajuste conforme sua necessidade)
             messages=[{
                 "role": "user",
