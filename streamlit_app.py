@@ -42,6 +42,7 @@ if uploaded_file is not None:
     # Analisar a imagem
     if st.button("Analisar Imagem"):
         # Processa a imagem
+        uploaded_file = image
         resultado = processar_imagem(uploaded_file)
 
         # Exibe os dados extraídos
