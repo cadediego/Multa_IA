@@ -9,6 +9,7 @@ load_dotenv()
 
 # Configuração da API do GPT
 openai.api_key = os.getenv("OPENAI_API_KEY")
+client = openai
 
 def image_to_base64(image_bytes):
     return base64.b64encode(image_bytes).decode('utf-8')
