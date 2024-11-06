@@ -52,7 +52,7 @@ def extrair_dados_da_imagem(image_bytes):
     except Exception as e:
         return f"Erro: {str(e)}"
 
-def processar_imagem(uploaded_file, prompt):
+def processar_imagem(uploaded_file):
     """
     Função para processar uma imagem carregada e extrair os dados estruturados.
     """
