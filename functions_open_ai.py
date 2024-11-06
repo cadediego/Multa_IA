@@ -46,7 +46,7 @@ def extrair_dados_da_imagem(image_bytes):
         )
 
         # Processa e retorna a resposta da análise
-        return response.choices[0].message["content"]
+        return response.choices[0].message.content
     except Exception as e:
         return f"Erro: {str(e)}"
 
