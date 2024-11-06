@@ -60,7 +60,7 @@ def processar_imagem(uploaded_file):
     img_bytes = uploaded_file.read()
 
     # Chama a função para extrair os dados da imagem
-    dados_extraidos = extrair_dados_da_imagem(img_bytes, prompt)
+    dados_extraidos = extrair_dados_da_imagem(img_bytes)
 
     # Retorna os dados extraídos ou erro
     return dados_extraidos
