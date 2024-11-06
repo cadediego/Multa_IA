@@ -8,38 +8,34 @@ load_dotenv()
 
 # Configuração da API do GPT
 openai.api_key = os.getenv("OPENAI_API_KEY")
-
-# Criar uma instância do cliente
 client = openai
 
+# Função para converter bytes de imagem para uma string base64
 def image_to_base64(image_bytes):
-    """
-    Converte os bytes de uma imagem para uma string base64.
-    """
     return base64.b64encode(image_bytes).decode('utf-8')
 
 def extrair_dados_da_imagem(image_bytes):
     """
     Função para usar GPT Vision para analisar a imagem e extrair dados estruturados.
-    A função retorna as informações da multa como um dicionário estruturado.
     """
     try:
         # Converte a imagem para base64
         img_b64_str = image_to_base64(image_bytes)
         prompt = "Extrair as informações de multa, como número da placa, infração, pontos na carteira, data e hora, e elementos de trânsito (como semáforo)."
-        # Criar o payload para a requisição à API
+        
+        # Cria a mensagem de entrada com a imagem em base64
         response = client.chat.completions.create(
-            model="gpt-4o-mini",  # Modelo GPT com capacidade de visão (ajuste conforme sua necessidade)
-            messages=[{
-                "role": "user",
-                "content": [
-                    {"type": "text", "text": prompt},
-                    {
-                        "type": "image_url",
-                        "image_url": {"url": f"data:image/png;base64,{img_b64_str}"},  # Envio da imagem em base64
-                    },
-                ]
-            }]
+            model="gpt-4-turbo",  # Ajuste o modelo conforme necessário
+            messages=[
+                {
+                    "role": "user",
+                    "content": prompt
+                },
+                {
+                    "role": "user",
+                    "content": f"data:image/png;base64,{img_b64_str}"
+                }
+            ]
         )
 
         # Processa a resposta da análise
