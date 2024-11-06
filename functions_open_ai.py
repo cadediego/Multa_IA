@@ -15,7 +15,7 @@ def image_to_base64(image_bytes):
     return base64.b64encode(image_bytes).decode('utf-8')
 
 
-def processar_imagem(uploaded_file):
+def extrair_dados_da_imagem(uploaded_file):
     try:
         # Lê os bytes da imagem
         img_bytes = uploaded_file.read()
