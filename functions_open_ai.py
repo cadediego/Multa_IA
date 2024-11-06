@@ -25,7 +25,7 @@ def extrair_dados_da_imagem(image_bytes):
         prompt = "Extrair informações da multa de trânsito, como número da placa, infração, pontos na carteira, data e hora, e verificar a presença de elementos de trânsito (como semáforo e faixa de pedestre)."
 
         # Envia a imagem e o prompt para o modelo
-        response = openai.ChatCompletion.create(
+        response = client.chat.completions.create(
             model="gpt-4o-mini",  # Confirme se esse modelo específico está disponível para seu uso
             messages=[
                 {
