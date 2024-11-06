@@ -1,56 +1,73 @@
 import streamlit as st
-from openai import OpenAI
+from PIL import Image
+import openai
+import io
+import smtplib
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
+from functions_open_ai import processar_imagem   # Importa a função do arquivo externo
 
 # Show title and description.
-st.title("💬 Chatbot")
+st.title("💬 Saiba se Você Foi Multado Injustamente!")
 st.write(
-    "This is a simple chatbot that uses OpenAI's GPT-3.5 model to generate responses. "
-    "To use this app, you need to provide an OpenAI API key, which you can get [here](https://platform.openai.com/account/api-keys). "
-    "You can also learn how to build this app step by step by [following our tutorial](https://docs.streamlit.io/develop/tutorials/llms/build-conversational-apps)."
+    "Carregue a foto ou cópia digital da sua multa de trânsito e nossa plataforma verificará automaticamente se há irregularidades nas informações."
+    "Nossa análise irá verificar se há elementos ausentes na imagem, como a presença de semáforos, faixas de pedestre e sinalizações que justifiquem a multa. Você receberá um resumo indicando se alguma informação pode estar incorreta ou ausente."
 )
 
-# Ask user for their OpenAI API key via `st.text_input`.
-# Alternatively, you can store the API key in `./.streamlit/secrets.toml` and access it
-# via `st.secrets`, see https://docs.streamlit.io/develop/concepts/connections/secrets-management
-openai_api_key = st.text_input("OpenAI API Key", type="password")
-if not openai_api_key:
-    st.info("Please add your OpenAI API key to continue.", icon="🗝️")
-else:
+# Configuração da API do GPT
+openai.api_key = "sua-chave"
 
-    # Create an OpenAI client.
-    client = OpenAI(api_key=openai_api_key)
+# Configuração do SMTP (por exemplo, usando Gmail)
+SMTP_SERVER = "smtp.gmail.com"
+SMTP_PORT = 587
+EMAIL = "seu-email@gmail.com"  # Insira o e-mail de envio
+EMAIL_PASSWORD = "sua-senha"    # Insira a senha do e-mail de envio
 
-    # Create a session state variable to store the chat messages. This ensures that the
-    # messages persist across reruns.
-    if "messages" not in st.session_state:
-        st.session_state.messages = []
+def enviar_email(destinatario, assunto, corpo):
+    msg = MIMEMultipart()
+    msg['From'] = EMAIL
+    msg['To'] = destinatario
+    msg['Subject'] = assunto
+    msg.attach(MIMEText(corpo, 'plain'))
 
-    # Display the existing chat messages via `st.chat_message`.
-    for message in st.session_state.messages:
-        with st.chat_message(message["role"]):
-            st.markdown(message["content"])
+    server = smtplib.SMTP(SMTP_SERVER, SMTP_PORT)
+    server.starttls()
+    server.login(EMAIL, EMAIL_PASSWORD)
+    server.send_message(msg)
+    server.quit()
 
-    # Create a chat input field to allow the user to enter a message. This will display
-    # automatically at the bottom of the page.
-    if prompt := st.chat_input("What is up?"):
+# Upload da imagem
+uploaded_file = st.file_uploader("Escolha uma imagem", type=["jpg", "jpeg", "png"])
 
-        # Store and display the current prompt.
-        st.session_state.messages.append({"role": "user", "content": prompt})
-        with st.chat_message("user"):
-            st.markdown(prompt)
+if uploaded_file is not None:
+    image = Image.open(uploaded_file)
+    st.image(image, caption="Imagem da multa", use_column_width=True)
 
-        # Generate a response using the OpenAI API.
-        stream = client.chat.completions.create(
-            model="gpt-3.5-turbo",
-            messages=[
-                {"role": m["role"], "content": m["content"]}
-                for m in st.session_state.messages
-            ],
-            stream=True,
-        )
+    # Converte a imagem para bytes para enviar para o GPT
+    img_bytes = io.BytesIO()
+    image.save(img_bytes, format="PNG")
+    img_bytes = img_bytes.getvalue()
 
-        # Stream the response to the chat using `st.write_stream`, then store it in 
-        # session state.
-        with st.chat_message("assistant"):
-            response = st.write_stream(stream)
-        st.session_state.messages.append({"role": "assistant", "content": response})
+    # Analisar a imagem
+    if st.button("Analisar Imagem"):
+       
+        # Processa a resposta
+        resultado = processar_imagem(img_bytes)  # Passa a imagem em bytes para a função
+
+        # Exibe os dados extraídos
+        st.subheader("Resultado da Análise")
+        st.write(resultado)
+
+        # Verifica se há irregularidades
+        if "irregularidade" in resultado.lower():
+            st.warning("Foi detectada uma possível irregularidade!")
+            
+            # Pede o e-mail para envio do relatório
+            email = st.text_input("Digite seu e-mail para receber o relatório completo das irregularidades:")
+            
+            if email and st.button("Enviar Relatório por E-mail"):
+                assunto = "Relatório de Verificação de Multas"
+                enviar_email(email, assunto, resultado)
+                st.success("Relatório enviado com sucesso!")
+    else:
+        st.error("Não foi possível analisar a imagem.")
