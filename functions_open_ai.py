@@ -24,7 +24,8 @@ def extrair_dados_da_imagem(image_bytes):
 
         # Verifica o comprimento da string base64 gerada (para debug)
         if len(img_b64_str) < 100:  # Se for muito curto, pode estar errado
-            return f"Erro: A string base64 gerada é muito curta. Verifique a imagem."
+            lenght =  len(img_b64_str)
+            return f"Erro: A string base64 gerada é muito curta. Verifique a imagem. {lenght}"
 
         prompt = "Extrair as informações de multa, como número da placa, infração, pontos na carteira, data e hora, e elementos de trânsito (como semáforo)."
         
