@@ -39,12 +39,7 @@ def extrair_dados_da_imagem(image_bytes):
         )
 
         # Processa a resposta da análise
-        if response and "choices" in response:
-            result = response['choices'][0].get('message', {}).get('content', 'Não foi possível processar a imagem.')
-            return result
-        else:
-            return "Erro: Não foi possível processar a imagem."
-
+        return response
     except Exception as e:
         return f"Erro: {str(e)}"
 
