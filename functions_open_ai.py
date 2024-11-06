@@ -10,26 +10,42 @@ load_dotenv()
 # Configuração da API do GPT
 openai.api_key = os.getenv("OPENAI_API_KEY")
 
+def image_to_base64(image_bytes):
+    return base64.b64encode(image_bytes).decode('utf-8')
+
 def extrair_dados_da_imagem(image_bytes):
     """
-    Função para usar GPT-4 Vision para analisar a imagem e extrair dados estruturados.
+    Função para usar GPT Vision para analisar a imagem e extrair dados estruturados.
     """
     try:
-        # Abre a imagem em modo binário
-        image_file = io.BytesIO(image_bytes)
-        
-        # Gera o prompt
-        prompt = "Extrair as informações de multa, como número da placa, infração, pontos na carteira, data e hora, e elementos de trânsito (como semáforo)."
-        
-        # Envia a imagem diretamente para o modelo GPT-4 Vision
-        response = openai.Image.create(
-            model="gpt-4-turbo-vision",
-            prompt=prompt,
-            file=image_file
+        # Converte a imagem para base64
+        img_b64_str = image_to_base64(image_bytes)
+
+        # Define o prompt para a análise da imagem
+        prompt = "Extrair informações da multa de trânsito, como número da placa, infração, pontos na carteira, data e hora, e verificar a presença de elementos de trânsito (como semáforo e faixa de pedestre)."
+
+        # Envia a imagem e o prompt para o modelo
+        response = openai.ChatCompletion.create(
+            model="gpt-4o-mini",  # Confirme se esse modelo específico está disponível para seu uso
+            messages=[
+                {
+                    "role": "user",
+                    "content": [
+                        {"type": "text", "text": prompt},
+                        {
+                            "type": "image_url",
+                            "image_url": {
+                                "url": f"data:image/jpeg;base64,{img_b64_str}"
+                            },
+                        },
+                    ]
+                }
+            ],
+            max_tokens=300
         )
 
-        # Retorna a resposta da análise
-        return response['data']
+        # Processa e retorna a resposta da análise
+        return response.choices[0].message["content"]
     except Exception as e:
         return f"Erro: {str(e)}"
 
