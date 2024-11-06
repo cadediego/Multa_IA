@@ -18,7 +18,7 @@ def image_to_base64(image_bytes):
     """
     return base64.b64encode(image_bytes).decode('utf-8')
 
-def extrair_dados_da_imagem(image_bytes, prompt):
+def extrair_dados_da_imagem(image_bytes):
     """
     Função para usar GPT Vision para analisar a imagem e extrair dados estruturados.
     A função retorna as informações da multa como um dicionário estruturado.
@@ -26,7 +26,7 @@ def extrair_dados_da_imagem(image_bytes, prompt):
     try:
         # Converte a imagem para base64
         img_b64_str = image_to_base64(image_bytes)
-
+        prompt = "Extrair as informações de multa, como número da placa, infração, pontos na carteira, data e hora, e elementos de trânsito (como semáforo)."
         # Criar o payload para a requisição à API
         response = client.chat_completions.create(
             model="gpt-4o-mini",  # Modelo GPT com capacidade de visão (ajuste conforme sua necessidade)
