@@ -23,7 +23,7 @@ def extrair_dados_da_imagem(image_bytes):
         img_b64_str = image_to_base64(image_bytes)
 
         # Define o prompt para a análise da imagem
-        prompt = "Extrair informações da multa de trânsito, como número da placa, infração, pontos na carteira, data e hora, e verificar a presença de elementos de trânsito (como semáforo e faixa de pedestre)."
+        prompt = "Extrair informações da multa de trânsito,sem pegar informações pessoais, quero apenas, infração, pontos na carteira, data e hora, e verificar a presença de elementos de trânsito (como semáforo e faixa de pedestre)."
 
         # Envia a imagem e o prompt para o modelo
         response = client.chat.completions.create(
