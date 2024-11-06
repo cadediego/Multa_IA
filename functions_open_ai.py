@@ -54,7 +54,7 @@ def processar_imagem(uploaded_file):
     Função para processar uma imagem carregada e extrair os dados estruturados.
     """
     # Lê os bytes da imagem
-    img_bytes = uploaded_file.read()
+    img_bytes = uploaded_file
 
     # Chama a função para extrair os dados da imagem
     dados_extraidos = extrair_dados_da_imagem(img_bytes)
