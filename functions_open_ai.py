@@ -1,9 +1,16 @@
 from PIL import Image
 import io
 import openai
+import os
+from dotenv import load_dotenv  # Carregar variáveis do arquivo .env
 
+# Carregar variáveis de ambiente do arquivo .env
+load_dotenv()
 # Configuração da API do GPT
-openai.api_key = "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"  # Substitua pela sua chave de API
+
+
+openai.api_key = os.getenv("OPENAI_API_KEY")
+# Substitua pela sua chave de API
 
 def extrair_dados_da_imagem(img_bytes):
     """
