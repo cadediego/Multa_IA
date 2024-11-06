@@ -13,24 +13,6 @@ st.write(
     "Nossa análise irá verificar se há elementos ausentes na imagem, como a presença de semáforos, faixas de pedestre e sinalizações que justifiquem a multa. Você receberá um resumo indicando se alguma informação pode estar incorreta ou ausente."
 )
 
-# Configuração do SMTP
-SMTP_SERVER = "smtp.gmail.com"
-SMTP_PORT = 587
-EMAIL = "seu-email@gmail.com"  # Substitua pelo seu e-mail de envio
-EMAIL_PASSWORD = "sua-senha"    # Substitua pela senha do seu e-mail de envio
-
-def enviar_email(destinatario, assunto, corpo):
-    msg = MIMEMultipart()
-    msg['From'] = EMAIL
-    msg['To'] = destinatario
-    msg['Subject'] = assunto
-    msg.attach(MIMEText(corpo, 'plain'))
-
-    server = smtplib.SMTP(SMTP_SERVER, SMTP_PORT)
-    server.starttls()
-    server.login(EMAIL, EMAIL_PASSWORD)
-    server.send_message(msg)
-    server.quit()
 
 # Upload da imagem
 uploaded_file = st.file_uploader("Escolha uma imagem", type=["jpg", "jpeg", "png"])
@@ -38,12 +20,16 @@ uploaded_file = st.file_uploader("Escolha uma imagem", type=["jpg", "jpeg", "png
 if uploaded_file is not None:
     image = Image.open(uploaded_file)
     st.image(image, caption="Imagem da multa", use_column_width=True)
+    
+    img_byte_arr = io.BytesIO()
+    image.save(img_byte_arr, format=image.format)
+    img_byte_arr = img_byte_arr.getvalue()
 
     # Analisar a imagem
     if st.button("Analisar Imagem"):
         # Processa a imagem
         uploaded_file = image
-        resultado = processar_imagem(uploaded_file)
+        resultado = processar_imagem(img_byte_arr)
 
         # Exibe os dados extraídos
         st.subheader("Resultado da Análise")
@@ -58,7 +44,7 @@ if uploaded_file is not None:
 
             if email and st.button("Enviar Relatório por E-mail"):
                 assunto = "Relatório de Verificação de Multas"
-                enviar_email(email, assunto, resultado)
+                #enviar_email(email, assunto, resultado)
                 st.success("Relatório enviado com sucesso!")
     else:
         st.error("Não foi possível analisar a imagem.")
