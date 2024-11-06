@@ -19,6 +19,7 @@ uploaded_file = st.file_uploader("Escolha uma imagem", type=["jpg", "jpeg", "png
 
 if uploaded_file is not None:
     image = Image.open(uploaded_file)
+    image = image.resize((800, 800)) 
     st.image(image, caption="Imagem da multa", use_column_width=True)
     
     img_byte_arr = io.BytesIO()
