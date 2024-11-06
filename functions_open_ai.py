@@ -42,7 +42,7 @@ def extrair_dados_da_imagem(image_bytes):
                     ]
                 }
             ],
-            max_tokens=300
+            #max_tokens=300
         )
 
         # Processa e retorna a resposta da análise
