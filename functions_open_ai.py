@@ -10,9 +10,6 @@ def extrair_dados_da_imagem(img_bytes):
     Função para usar GPT Vision para analisar a imagem e extrair dados estruturados.
     A função retorna as informações da multa como um dicionário estruturado.
     """
-    # Converte os bytes da imagem para um formato que o PIL pode processar
-    img = Image.open(io.BytesIO(img_bytes))
-
     try:
         # Enviar a imagem para o GPT Vision para análise
         response = openai.Image.create(
@@ -58,10 +55,8 @@ def processar_imagem(uploaded_file):
     """
     Função para processar uma imagem carregada e extrair os dados estruturados.
     """
-    # Converte a imagem para bytes
-    img_bytes = io.BytesIO()
-    uploaded_file.save(img_bytes, format="PNG")  # Salva a imagem carregada em formato PNG
-    img_bytes = img_bytes.getvalue()
+    # Lê os bytes da imagem
+    img_bytes = uploaded_file.read()
 
     # Chama a função para extrair os dados da imagem
     dados_extraidos = extrair_dados_da_imagem(img_bytes)
