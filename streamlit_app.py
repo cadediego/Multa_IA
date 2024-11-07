@@ -20,12 +20,13 @@ uploaded_file = st.file_uploader("Escolha uma imagem", type=["jpg", "jpeg", "png
 if uploaded_file is not None:
     image = Image.open(uploaded_file)
     # Redimensiona a imagem para reduzir o tamanho e aplica compressão
-    image = image.resize((400, 400))  # Experimente um tamanho menor
+    #image = image.resize((400, 400))  # Experimente um tamanho menor
     st.image(image, caption="Imagem da multa", use_column_width=True)
 
     # Converte a imagem para bytes com compressão JPEG
     img_byte_arr = io.BytesIO()
-    image.save(img_byte_arr, format='JPEG', quality=50)  # Ajuste a qualidade conforme necessário
+    image.save(img_byte_arr, format=image.format)
+    #image.save(img_byte_arr, format='JPEG', quality=50)  # Ajuste a qualidade conforme necessário
     img_byte_arr = img_byte_arr.getvalue()
 
     # Analisar a imagem
