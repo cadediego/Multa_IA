@@ -27,7 +27,7 @@ def extrair_dados_da_imagem(image_bytes):
 
         # Envia a imagem e o prompt para o modelo
         response = client.chat.completions.create(
-            model="gpt-4o-mini",  # Confirme se esse modelo específico está disponível para seu uso
+            model="gpt-4o",  # Confirme se esse modelo específico está disponível para seu uso
             messages=[
                 {
                     "role": "user",
