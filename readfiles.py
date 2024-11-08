@@ -23,31 +23,28 @@ def preprocess_image(image_bytes):
     img = img.filter(ImageFilter.MedianFilter())
     return img
 
-def image_to_base64(image_bytes):
+def image_to_base64(image):
     """Converte a imagem em base64. A função tenta garantir a compatibilidade para JPEG."""
     try:
-        # Verifique o tipo da imagem e converta para base64
-        img = Image.open(io.BytesIO(image_bytes))
         img_byte_arr = io.BytesIO()
-        img.save(img_byte_arr, format='JPEG')  # Salva em JPEG
+        image.save(img_byte_arr, format='JPEG')  # Salva em JPEG
         img_byte_arr = img_byte_arr.getvalue()
         return base64.b64encode(img_byte_arr).decode('utf-8')
     except Exception as e:
         return f"Erro ao converter imagem para base64: {str(e)}"
 
-def extrair_texto_com_ocr(image_bytes):
+def extrair_texto_com_ocr(preprocessed_image):
     """Extrai texto da imagem usando OCR com Tesseract."""
     try:
-        img = Image.open(io.BytesIO(image_bytes))
-        texto_extraido = pytesseract.image_to_string(img, lang='por')
+        texto_extraido = pytesseract.image_to_string(preprocessed_image, lang='por')
         return texto_extraido
     except Exception as e:
         return f"Erro ao processar a imagem: {str(e)}"
 
-def analisar_imagem_do_carro(image_bytes):
+def analisar_imagem_do_carro(preprocessed_image):
     """Análise visual da imagem usando OpenAI."""
     try:
-        img_b64_str = image_to_base64(image_bytes)
+        img_b64_str = image_to_base64(preprocessed_image)
         if "Erro" in img_b64_str:
             return img_b64_str  # Retorna o erro de conversão base64 se houver
 
@@ -62,7 +59,7 @@ def analisar_imagem_do_carro(image_bytes):
         """
         
         response = client.chat_completions.create(
-            model="gpt-4-vision",  # Confirme se o modelo visual correto está configurado
+            model="gpt-4-vision",
             messages=[{
                 "role": "user",
                 "content": prompt
@@ -75,11 +72,10 @@ def analisar_imagem_do_carro(image_bytes):
 
 def processar_imagem_completa(uploaded_file):
     """Processa a imagem para extração de texto e análise de elementos visuais."""
-    img_bytes = uploaded_file
-    img_bytes = preprocess_image(img_bytes)
-    texto_extraido = extrair_texto_com_ocr(img_bytes)
-    #analise_imagem_carro = analisar_imagem_do_carro(img_bytes)
+    preprocessed_img = preprocess_image(uploaded_file)
+    texto_extraido = extrair_texto_com_ocr(preprocessed_img)
+    # analise_imagem_carro = analisar_imagem_do_carro(preprocessed_img)
     return {
         "texto_extraido": texto_extraido
-        #"analise_imagem_carro": analise_imagem_carro
+        # "analise_imagem_carro": analise_imagem_carro
     }
