@@ -17,7 +17,7 @@ def image_to_base64(image_bytes):
 
 
 def extrair_texto_com_ocr(image_bytes):
-
+    """Extrai texto da imagem usando Tesseract OCR."""
     try:
         img = Image.open(io.BytesIO(image_bytes))
         texto_extraido = pytesseract.image_to_string(img, lang='por')  # 'por' para português
