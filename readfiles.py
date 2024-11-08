@@ -9,7 +9,7 @@ import base64
 load_dotenv()
 openai.api_key = os.getenv("OPENAI_API_KEY")
 client = openai
-
+pytesseract.pytesseract.tesseract_cmd = '/usr/bin/tesseract'
 
 def image_to_base64(image_bytes):
     return base64.b64encode(image_bytes).decode('utf-8')
