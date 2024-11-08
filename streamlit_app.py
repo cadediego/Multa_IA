@@ -5,6 +5,7 @@ import smtplib
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from functions_open_ai import processar_imagem
+from readfiles import processar_imagem_completa
 
 # Show title and description.
 st.title("💬 Saiba se Você Foi Multado Injustamente!")
@@ -33,7 +34,7 @@ if uploaded_file is not None:
     if st.button("Analisar Imagem"):
         # Processa a imagem
         uploaded_file = image
-        resultado = processar_imagem(img_byte_arr)
+        resultado = processar_imagem_completa(img_byte_arr)
 
         # Exibe os dados extraídos
         st.subheader("Resultado da Análise")
