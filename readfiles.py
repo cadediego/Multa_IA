@@ -1,5 +1,5 @@
 import pytesseract
-from PIL import Image
+from PIL import Image, ImageEnhance, ImageFilter
 import io
 import openai
 import os
@@ -10,6 +10,18 @@ load_dotenv()
 openai.api_key = os.getenv("OPENAI_API_KEY")
 client = openai
 pytesseract.pytesseract.tesseract_cmd = '/usr/bin/tesseract'
+
+def preprocess_image(image_bytes):
+    """Aplica preprocessamento na imagem para melhorar a precisão do OCR."""
+    img = Image.open(io.BytesIO(image_bytes))
+    # Converter para escala de cinza
+    img = img.convert("L")
+    # Aumentar o contraste
+    enhancer = ImageEnhance.Contrast(img)
+    img = enhancer.enhance(2)
+    # Aplicar filtro de suavização para reduzir ruído
+    img = img.filter(ImageFilter.MedianFilter())
+    return img
 
 def image_to_base64(image_bytes):
     """Converte a imagem em base64. A função tenta garantir a compatibilidade para JPEG."""
@@ -64,6 +76,7 @@ def analisar_imagem_do_carro(image_bytes):
 def processar_imagem_completa(uploaded_file):
     """Processa a imagem para extração de texto e análise de elementos visuais."""
     img_bytes = uploaded_file
+    img_bytes = preprocess_image(img_bytes)
     texto_extraido = extrair_texto_com_ocr(img_bytes)
     #analise_imagem_carro = analisar_imagem_do_carro(img_bytes)
     return {
