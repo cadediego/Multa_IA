@@ -21,30 +21,35 @@ def preprocess_image(image_bytes):
     img = enhancer.enhance(2)
     # Aplicar filtro de suavização para reduzir ruído
     img = img.filter(ImageFilter.MedianFilter())
-    return img
+    
+    # Converter para JPEG para garantir compatibilidade
+    img_byte_arr = io.BytesIO()
+    img.save(img_byte_arr, format='JPEG')
+    img_byte_arr = img_byte_arr.getvalue()
+    return img_byte_arr
 
-def image_to_base64(image):
-    """Converte a imagem em base64. A função tenta garantir a compatibilidade para JPEG."""
+def image_to_base64(image_bytes):
+    """Converte a imagem em base64."""
     try:
-        img_byte_arr = io.BytesIO()
-        image.save(img_byte_arr, format='JPEG')  # Salva em JPEG
-        img_byte_arr = img_byte_arr.getvalue()
-        return base64.b64encode(img_byte_arr).decode('utf-8')
+        # Processa a imagem para garantir que esteja no formato JPEG
+        img_jpeg = preprocess_image(image_bytes)
+        return base64.b64encode(img_jpeg).decode('utf-8')
     except Exception as e:
         return f"Erro ao converter imagem para base64: {str(e)}"
 
-def extrair_texto_com_ocr(preprocessed_image):
+def extrair_texto_com_ocr(image_bytes):
     """Extrai texto da imagem usando OCR com Tesseract."""
     try:
-        texto_extraido = pytesseract.image_to_string(preprocessed_image, lang='por')
+        img = Image.open(io.BytesIO(image_bytes))
+        texto_extraido = pytesseract.image_to_string(img, lang='por')
         return texto_extraido
     except Exception as e:
         return f"Erro ao processar a imagem: {str(e)}"
 
-def analisar_imagem_do_carro(preprocessed_image):
+def analisar_imagem_do_carro(image_bytes):
     """Análise visual da imagem usando OpenAI."""
     try:
-        img_b64_str = image_to_base64(preprocessed_image)
+        img_b64_str = image_to_base64(image_bytes)
         if "Erro" in img_b64_str:
             return img_b64_str  # Retorna o erro de conversão base64 se houver
 
@@ -58,8 +63,9 @@ def analisar_imagem_do_carro(preprocessed_image):
         Descreva de maneira estruturada os elementos encontrados.
         """
         
+        # Chamando o modelo de visão para análise da imagem
         response = client.chat_completions.create(
-            model="gpt-4-vision",
+            model="gpt-4-vision",  # Verifique se o modelo de visão está configurado corretamente
             messages=[{
                 "role": "user",
                 "content": prompt
@@ -72,10 +78,16 @@ def analisar_imagem_do_carro(preprocessed_image):
 
 def processar_imagem_completa(uploaded_file):
     """Processa a imagem para extração de texto e análise de elementos visuais."""
-    preprocessed_img = preprocess_image(uploaded_file)
-    texto_extraido = extrair_texto_com_ocr(preprocessed_img)
-    # analise_imagem_carro = analisar_imagem_do_carro(preprocessed_img)
+    img_bytes = uploaded_file
+    # Processa a imagem para JPEG e prepara a base64
+    img_b64_str = image_to_base64(img_bytes)
+    if "Erro" in img_b64_str:
+        return {"erro": img_b64_str}
+    
+    texto_extraido = extrair_texto_com_ocr(img_bytes)
+    #analise_imagem_carro = analisar_imagem_do_carro(img_bytes)
+    
     return {
         "texto_extraido": texto_extraido
-        # "analise_imagem_carro": analise_imagem_carro
+        #"analise_imagem_carro": analise_imagem_carro
     }
