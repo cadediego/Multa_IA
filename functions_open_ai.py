@@ -26,8 +26,7 @@ def extrair_dados_da_imagem(image_bytes):
         prompt = """
         
         
-Extrair informações da notificação de multa de trânsito. Por favor, extraia e organize os seguintes dados de maneira estruturada:
-se a informação não existir, ignorar
+Extraia todos os textos de maneira estruturada
 
 **Cabeçalho da notificação:**
 - Código RENAINF
@@ -52,9 +51,6 @@ se a informação não existir, ignorar
 - Identificação do agente de trânsito
 - Número e marca/modelo do equipamento
 - Município autuador e código do órgão autuador
-
-Além disso, verifique se a imagem anexa do veículo contém elementos visuais relacionados ao trânsito, como a presença de semáforos, faixas de pedestres e outras sinalizações.  extraia de maneira estruturadas as informações de roda pé
-
 
 Não inclua informações pessoais ou dados de contato do proprietário do veículo."""
 
