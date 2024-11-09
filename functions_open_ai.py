@@ -31,7 +31,7 @@ se a informação não existir, ignorar
 
 **Cabeçalho da notificação:**
 - Código RENAINF
-- Data da infração
+- Data da infração 
 - Placa
 - Município e UF
 - Código e descrição da infração
