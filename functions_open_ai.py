@@ -26,31 +26,7 @@ def extrair_dados_da_imagem(image_bytes):
         prompt = """
         
         
-Extraia todos os textos de maneira estruturada
-
-**Cabeçalho da notificação:**
-- Código RENAINF
-- Data da infração 
-- Placa
-- Município e UF
-- Código e descrição da infração
-- Número do Auto de Infração (AIT)
-- Prazo para apresentação do condutor
-
-**Detalhes adicionais da notificação:**
-- Veículo: placa, cor, marca/modelo, espécie e tipo de veículo
-- Data de emissão da notificação
-- Local, data e hora da infração
-- Observações
-- Código de enquadramento e base legal da infração
-- Pontuação associada à infração
-- Descrição completa da infração
-- Velocidade regulamentada, velocidade medida e velocidade considerada
-- Data de aferição do equipamento de fiscalização
-- Município da infração e UF
-- Identificação do agente de trânsito
-- Número e marca/modelo do equipamento
-- Município autuador e código do órgão autuador
+Extraia todos os textos da imagem
 
 Não inclua informações pessoais ou dados de contato do proprietário do veículo."""
 
