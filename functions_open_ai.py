@@ -27,9 +27,7 @@ def extrair_dados_da_imagem(image_bytes):
         
         
 Extraia todos os textos da imagem
-não invente ou complete informações que não estão na imagem, seja MUITO criterioso
-
-Não inclua informações pessoais ou dados de contato do proprietário do veículo."""
+"""
 
 
         # Envia a imagem e o prompt para o modelo
