@@ -21,7 +21,7 @@ if uploaded_file is not None:
     image = Image.open(uploaded_file)
     image = image.convert("RGB") 
     # Redimensiona a imagem para reduzir o tamanho e aplica compressão
-    #image = image.resize((400, 400))  # Experimente um tamanho menor
+    image = image.resize((400, 400))  # Experimente um tamanho menor
 
 
     st.image(image, caption="Imagem da multa", use_column_width=True)
