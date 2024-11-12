@@ -25,6 +25,7 @@ if uploaded_file is not None:
 
 
     st.image(image, caption="Imagem da multa", use_column_width=True)
+    st.write(f"Tipo da imagem: {image.format}") 
 
     # Converte a imagem para bytes com compressão JPEG
     img_byte_arr = io.BytesIO()
