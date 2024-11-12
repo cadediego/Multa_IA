@@ -41,6 +41,20 @@ if uploaded_file is not None:
 
 
     st.image(image, caption="Imagem da multa", use_column_width=True)
+
+    # Função para rotacionar a imagem
+    def rotacionar_imagem(imagem, angulo):
+        return imagem.rotate(angulo, expand=True)
+
+    # Botão para rotacionar a imagem
+    angulo = st.slider("Escolha o ângulo para rotacionar", min_value=0, max_value=360, step=1, value=0)
+    
+    if st.button("Rotacionar Imagem"):
+        image_rotacionada = rotacionar_imagem(image, angulo)
+        
+        # Exibe a imagem rotacionada
+        st.image(image_rotacionada, caption="Imagem Rotacionada", use_column_width=True)
+        
     st.write(f"Tipo da imagem: {image.format}") 
 
 
