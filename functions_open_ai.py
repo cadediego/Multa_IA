@@ -26,7 +26,7 @@ def extrair_dados_da_imagem(image_bytes):
         prompt = """
         
         
-Extraia todos os textos da imagem
+Extraia SOMENTE os textos da imagem de maneira estrutura, se não souver não invente de maneira nenhuma palavras ou números
  
 
 """
