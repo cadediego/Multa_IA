@@ -19,20 +19,30 @@ uploaded_file = st.file_uploader("Escolha uma imagem", type=["jpg", "jpeg", "png
 
 if uploaded_file is not None:
     image = Image.open(uploaded_file)
-    image = image.convert("RGB") 
-    # Redimensiona a imagem para reduzir o tamanho e aplica compressão
-    image = image.resize((400, 400))  # Experimente um tamanho menor
+
+
+    if image.format is None:
+        st.error("Formato de imagem inválido ou não detectado.")
+    else:
+        image = image.convert("RGB")  # Converte para RGB para evitar problemas com transparência
+
+        # Cria o objeto de byte
+        img_byte_arr = io.BytesIO()
+        
+        try:
+            # Salva a imagem explicitamente como JPEG
+            image.save(img_byte_arr, format="JPEG", quality=50)
+            img_byte_arr = img_byte_arr.getvalue()
+
+        except ValueError as e:
+            st.error(f"Erro ao salvar a imagem: {e}")
+
+   
 
 
     st.image(image, caption="Imagem da multa", use_column_width=True)
     st.write(f"Tipo da imagem: {image.format}") 
 
-    # Converte a imagem para bytes com compressão JPEG
-    img_byte_arr = io.BytesIO()
-    image_format = "JPEG" if image.format == "PNG" else image.format 
-    image.save(img_byte_arr, format=image.format)
-    #image.save(img_byte_arr, format='JPEG', quality=50)  # Ajuste a qualidade conforme necessário
-    img_byte_arr = img_byte_arr.getvalue()
 
     # Analisar a imagem
     if st.button("Analisar Imagem"):
