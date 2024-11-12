@@ -27,6 +27,8 @@ def extrair_dados_da_imagem(image_bytes):
         
         
 Extraia todos os textos da imagem
+ 
+
 """
 
 
