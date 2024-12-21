@@ -7,10 +7,10 @@ from email.mime.text import MIMEText
 from functions_open_ai import processar_imagem
 
 # Show title and description.
-st.title("💬 Saiba se Você Foi Multado Injustamente!")
+st.title("💬 Descubra o significado do seu Sonho!")
 st.write(
-    "Carregue a foto ou cópia digital da sua multa de trânsito e nossa plataforma verificará automaticamente se há irregularidades nas informações."
-    "Nossa análise irá verificar se há elementos ausentes na imagem, como a presença de semáforos, faixas de pedestre e sinalizações que justifiquem a multa. Você receberá um resumo indicando se alguma informação pode estar incorreta ou ausente."
+    "Descubra o verdadeiro significado por trás de sonhos de gravidez, traição, perseguição e muito mais em segundos"
+    "conte me como foi o sonho!"
 )
 
 
